@@ -170,15 +170,6 @@ Or open in VS Code with Jupyter extension.
 
 ## 📊 Results & Analysis
 
-### Model Comparison
-
-| Model | ROUGE-1 | ROUGE-2 | ROUGE-L | Training Time | Status |
-|-------|---------|---------|---------|---------------|--------|
-| LED Baseline | 0.000 | 0.000 | 0.000 | N/A | ❌ Not suitable |
-| LED + LoRA | 0.000 | 0.000 | 0.000 | 7h 38m | ❌ Not suitable |
-| **BART + LoRA** | **0.239** | **0.038** | **0.138** | **1h 03m** | ✅ **Best** |
-| BART Improved | 0.007 | 0.000 | 0.006 | 2h 07m | ❌ Overfitted |
-
 ### Performance Distribution (20 samples)
 - High performing (ROUGE-1 > 0.30): 8 samples (40%)
 - Average performing (0.15-0.30): 8 samples (40%)
@@ -317,7 +308,7 @@ If you use this work, please cite:
 ```bibtex
 @project{book_summarization_2025,
   title={Automated Book Summarization using Generative AI},
-  author={[Your Name]},
+  author={[Avinash]},
   year={2025},
   note={BART + LoRA fine-tuning for long-form text summarization}
 }
@@ -329,24 +320,6 @@ If you use this work, please cite:
 2. **LoRA:** Hu et al. "LoRA: Low-Rank Adaptation of Large Language Models" (2021)
 3. **BERTScore:** Zhang et al. "BERTScore: Evaluating Text Generation with BERT" (2019)
 4. **CMU Dataset:** Bamman et al. "Learning Latent Personas of Film Characters" (2013)
-
-## 🤝 Contributing
-
-This is an academic project. For questions or collaborations, please open an issue or contact the maintainer.
-
-## 📄 License
-
-This project uses:
-- Code: MIT License
-- Models: Subject to HuggingFace model licenses
-- Data: Project Gutenberg (public domain) + CMU Dataset (research use)
-
-## 🎓 Acknowledgments
-
-- HuggingFace Transformers team for excellent libraries
-- Project Gutenberg for public domain books
-- CMU for Book Summary Dataset
-- Apple Silicon MPS for fast training
 
 ---
 
