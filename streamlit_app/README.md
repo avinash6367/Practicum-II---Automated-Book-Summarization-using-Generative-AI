@@ -222,5 +222,3 @@ ModuleNotFoundError: No module named 'X'
 ```bash
 pip install -r streamlit_app/requirements.txt
 ```
-
-**Built with ❤️ using Streamlit, PyTorch, and Hugging Face Transformers**
