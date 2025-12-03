@@ -225,7 +225,6 @@ Or open in VS Code with Jupyter extension.
 ✅ Good length control
 
 ### Limitations
-⚠️ Input truncation (only sees first ~800 words of book)
 ⚠️ Single-pass generation (no hierarchical approach)
 ⚠️ Generic summarization style (not adapted to fiction vs non-fiction)
 ⚠️ Pre-trained on news articles (domain mismatch)
@@ -271,37 +270,6 @@ def generate_book_summary(book_text, model, tokenizer, device):
         "length": len(summary.split())
     }
 ```
-
-### Resource Requirements
-- **Memory:** ~2GB for model inference
-- **Compute:** GPU/MPS recommended (10x speedup vs CPU)
-- **Inference Time:** 2-5 seconds per summary
-- **Storage:** ~1.5GB for model weights
-
-### Model Files
-- Location: `./results/week5_bart/`
-- Includes: LoRA adapter weights, configuration, tokenizer
-- Format: HuggingFace compatible
-
-## 🔮 Future Improvements
-
-### Short-term
-1. Increase training data (currently 2,193, up to 17,456 available)
-2. Implement early stopping based on validation ROUGE
-3. Separate models for fiction vs non-fiction
-4. Add diversity penalties during generation
-
-### Medium-term
-1. Hierarchical/sliding window approach for full book context
-2. Multi-reference evaluation
-3. Human evaluation on sample summaries
-4. Fine-tune on book-specific corpus first
-
-### Long-term
-1. Retrieval-augmented generation (RAG)
-2. Ensemble of multiple fine-tuned models
-3. Chapter-by-chapter summarization with final synthesis
-4. Style-controlled generation (plot-focused vs thematic)
 
 ## 📚 Dataset Information
 
@@ -362,24 +330,6 @@ If you use this work, please cite:
 2. **LoRA:** Hu et al. "LoRA: Low-Rank Adaptation of Large Language Models" (2021)
 3. **BERTScore:** Zhang et al. "BERTScore: Evaluating Text Generation with BERT" (2019)
 4. **CMU Dataset:** Bamman et al. "Learning Latent Personas of Film Characters" (2013)
-
-## 🤝 Contributing
-
-This is an academic project. For questions or collaborations, please open an issue or contact the maintainer.
-
-## 📄 License
-
-This project uses:
-- Code: MIT License
-- Models: Subject to HuggingFace model licenses
-- Data: Project Gutenberg (public domain) + CMU Dataset (research use)
-
-## 🎓 Acknowledgments
-
-- HuggingFace Transformers team for excellent libraries
-- Project Gutenberg for public domain books
-- CMU for Book Summary Dataset
-- Apple Silicon MPS for fast training
 
 ---
 
