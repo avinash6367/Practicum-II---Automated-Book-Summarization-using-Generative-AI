@@ -241,6 +241,6 @@ If you use this work, please cite:
 
 ---
 
-**Last Updated:** November 26, 2025  
-**Status:** ✅ Production-ready model available  
+**Last Updated:** December 03, 2025  
+**Status:** ✅ Streamlit Application is available  
 **Best Model:** `./results/week5_bart/` (BART + LoRA, ROUGE-1: 0.239, BERTScore: 0.82)
