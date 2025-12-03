@@ -17,6 +17,12 @@ This project implements an end-to-end pipeline for automated book summarization,
 
 ```
 book summ/
+├── streamlit_app/                    # Week 7 Interactive Application
+│   ├── app.py                        # Main Streamlit application
+│   ├── utils.py                      # Helper functions
+│   ├── config.py                     # Configuration
+│   ├── requirements.txt              # Dependencies
+│   └── README.md                     # App documentation
 ├── data/
 │   ├── raw/                          # Original datasets
 │   │   ├── books_summary.csv         # CSV book summaries
@@ -31,11 +37,26 @@ book summ/
 │   ├── week4_lora/                   # LED + LoRA experiments
 │   └── model_metadata.json           # Model configuration
 ├── data_processing.ipynb             # Main notebook (Week 1-6)
+├── week7_streamlit_app.ipynb         # Week 7 development notebook
 ├── model_comparison.png              # Model performance visualization
 └── week6_comprehensive_evaluation.png # Advanced metrics visualization
 ```
 
 ## 🚀 Quick Start
+
+### Option 1: Run Streamlit Application (Recommended)
+
+```bash
+# Activate virtual environment
+source .venv/bin/activate
+
+# Run the interactive application
+streamlit run streamlit_app/app.py
+```
+
+Access the application at `http://localhost:8501`
+
+### Option 2: Use Jupyter Notebooks
 
 ### Prerequisites
 
@@ -48,6 +69,7 @@ datasets >= 2.14
 rouge-score >= 0.1
 bert-score >= 0.3
 sentence-transformers >= 2.2
+streamlit >= 1.28
 ```
 
 ### Installation
@@ -107,6 +129,17 @@ Or open in VS Code with Jupyter extension.
 - Error analysis and limitation identification
 - Production-ready inference code
 - Deployment documentation and monitoring framework
+
+### Week 7: Interactive Streamlit Application
+- Developed comprehensive web application for model demonstration
+- Three-tab interface: Summarize, Compare Models, and Metrics
+- Real-time summary generation with multiple model support
+- Interactive model comparison (Week 5 BART, Week 4 Improved, Week 4 LoRA)
+- Automated metrics calculation (ROUGE, BERTScore, Semantic Similarity)
+- File upload support for text and PDF documents
+- Performance visualization with Plotly charts
+- Deployed on Apple Silicon with MPS acceleration
+- **Status:** ✅ Production deployment successful
 
 ## 🎯 Model Performance
 
@@ -168,6 +201,77 @@ Or open in VS Code with Jupyter extension.
 }
 ```
 
+## 📊 Results & Analysis
+
+### Model Comparison
+
+| Model | ROUGE-1 | ROUGE-2 | ROUGE-L | Training Time | Status |
+|-------|---------|---------|---------|---------------|--------|
+| LED Baseline | 0.000 | 0.000 | 0.000 | N/A | ❌ Not suitable |
+| LED + LoRA | 0.000 | 0.000 | 0.000 | 7h 38m | ❌ Not suitable |
+| **BART + LoRA** | **0.239** | **0.038** | **0.138** | **1h 03m** | ✅ **Best** |
+| BART Improved | 0.007 | 0.000 | 0.006 | 2h 07m | ❌ Overfitted |
+
+### Performance Distribution (20 samples)
+- High performing (ROUGE-1 > 0.30): 8 samples (40%)
+- Average performing (0.15-0.30): 8 samples (40%)
+- Low performing (<0.15): 4 samples (20%)
+
+### Strengths
+✅ Strong semantic understanding (BERTScore 0.82)
+✅ Abstractive generation (not just copying)
+✅ Efficient training with LoRA
+✅ Fast inference (~2-5 seconds per summary)
+✅ Good length control
+
+### Limitations
+⚠️ Input truncation (only sees first ~800 words of book)
+⚠️ Single-pass generation (no hierarchical approach)
+⚠️ Generic summarization style (not adapted to fiction vs non-fiction)
+⚠️ Pre-trained on news articles (domain mismatch)
+⚠️ No multi-reference evaluation
+
+## 🚢 Deployment
+
+### Production Inference
+
+```python
+def generate_book_summary(book_text, model, tokenizer, device):
+    """Generate summary with error handling"""
+    # Input validation
+    if len(book_text) < 100:
+        return {"status": "error", "message": "Input too short"}
+    
+    # Tokenize
+    inputs = tokenizer(
+        book_text,
+        max_length=1024,
+        truncation=True,
+        return_tensors="pt"
+    ).to(device)
+    
+    # Generate
+    model.eval()
+    with torch.no_grad():
+        summary_ids = model.generate(
+            **inputs,
+            max_length=256,
+            min_length=50,
+            num_beams=4,
+            early_stopping=True,
+            no_repeat_ngram_size=3,
+            length_penalty=2.0
+        )
+    
+    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+    
+    return {
+        "status": "success",
+        "summary": summary,
+        "length": len(summary.split())
+    }
+```
+
 ### Resource Requirements
 - **Memory:** ~2GB for model inference
 - **Compute:** GPU/MPS recommended (10x speedup vs CPU)
@@ -178,6 +282,26 @@ Or open in VS Code with Jupyter extension.
 - Location: `./results/week5_bart/`
 - Includes: LoRA adapter weights, configuration, tokenizer
 - Format: HuggingFace compatible
+
+## 🔮 Future Improvements
+
+### Short-term
+1. Increase training data (currently 2,193, up to 17,456 available)
+2. Implement early stopping based on validation ROUGE
+3. Separate models for fiction vs non-fiction
+4. Add diversity penalties during generation
+
+### Medium-term
+1. Hierarchical/sliding window approach for full book context
+2. Multi-reference evaluation
+3. Human evaluation on sample summaries
+4. Fine-tune on book-specific corpus first
+
+### Long-term
+1. Retrieval-augmented generation (RAG)
+2. Ensemble of multiple fine-tuned models
+3. Chapter-by-chapter summarization with final synthesis
+4. Style-controlled generation (plot-focused vs thematic)
 
 ## 📚 Dataset Information
 
@@ -226,7 +350,7 @@ If you use this work, please cite:
 ```bibtex
 @project{book_summarization_2025,
   title={Automated Book Summarization using Generative AI},
-  author={[Avinash]},
+  author={[Your Name]},
   year={2025},
   note={BART + LoRA fine-tuning for long-form text summarization}
 }
@@ -239,8 +363,44 @@ If you use this work, please cite:
 3. **BERTScore:** Zhang et al. "BERTScore: Evaluating Text Generation with BERT" (2019)
 4. **CMU Dataset:** Bamman et al. "Learning Latent Personas of Film Characters" (2013)
 
+## 🤝 Contributing
+
+This is an academic project. For questions or collaborations, please open an issue or contact the maintainer.
+
+## 📄 License
+
+This project uses:
+- Code: MIT License
+- Models: Subject to HuggingFace model licenses
+- Data: Project Gutenberg (public domain) + CMU Dataset (research use)
+
+## 🎓 Acknowledgments
+
+- HuggingFace Transformers team for excellent libraries
+- Project Gutenberg for public domain books
+- CMU for Book Summary Dataset
+- Apple Silicon MPS for fast training
+
 ---
 
-**Last Updated:** December 03, 2025  
-**Status:** ✅ Streamlit Application is available  
-**Best Model:** `./results/week5_bart/` (BART + LoRA, ROUGE-1: 0.239, BERTScore: 0.82)
+## 🙏 Special Thanks
+
+I would like to express my sincere gratitude to my professor for their invaluable guidance and support throughout this 7-week practicum project. This journey from literature review to deploying a production-ready Streamlit application has been an incredible learning experience in:
+
+- **Generative AI & Transfer Learning:** Understanding and implementing state-of-the-art transformer architectures
+- **Practical Machine Learning:** Experiencing real-world challenges like model selection, overfitting, and evaluation metrics
+- **End-to-End Development:** From data collection to production deployment
+- **Research & Documentation:** Maintaining weekly progress reports and comprehensive documentation
+
+The hands-on experience with BART, LoRA fine-tuning, and advanced evaluation metrics (BERTScore, semantic similarity) has deepened my understanding of modern NLP. The lessons learned from both successful experiments (Week 5 BART) and failed attempts (LED architecture, overfitting in Week 4) have been equally valuable.
+
+Thank you for creating an environment that encouraged experimentation, iteration, and learning from mistakes. The structured weekly approach helped maintain momentum while allowing flexibility to explore different solutions.
+
+**Thank you, Professor, for your mentorship and expertise!**
+
+---
+
+**Last Updated:** December 3, 2025  
+**Status:** ✅ Week 7 Complete - Interactive Streamlit Application Deployed  
+**Best Model:** `./results/week5_bart/` (BART + LoRA, ROUGE-1: 0.2114, BERTScore: 0.8195)  
+**Live Application:** `http://localhost:8501`
