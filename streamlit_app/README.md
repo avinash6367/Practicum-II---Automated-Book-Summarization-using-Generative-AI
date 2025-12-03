@@ -186,63 +186,6 @@ streamlit_app/
 # Upload a book chapter
 ```
 
-## 🌐 Deployment Options
-
-### Option 1: Streamlit Community Cloud (Free)
-
-1. Push code to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Connect your repository
-4. Deploy!
-
-**Note**: Limited resources (1GB RAM), no GPU
-
-### Option 2: Hugging Face Spaces
-
-1. Create a Space on Hugging Face
-2. Select Streamlit SDK
-3. Upload files
-4. Configure `requirements.txt`
-
-**Benefit**: Free GPU access (limited)
-
-### Option 3: Docker
-
-```dockerfile
-FROM python:3.10-slim
-
-WORKDIR /app
-COPY . .
-RUN pip install -r streamlit_app/requirements.txt
-
-EXPOSE 8501
-CMD ["streamlit", "run", "streamlit_app/app.py"]
-```
-
-### Option 4: Cloud Platforms
-
-- **AWS**: EC2 + ECS/EKS
-- **GCP**: Cloud Run or App Engine
-- **Azure**: Web Apps or Container Instances
-
-## 📊 Performance Considerations
-
-### Memory Usage
-- Base model: ~1.6 GB per BART model
-- Runtime: ~4 GB minimum RAM
-- Recommendation: 8-16 GB RAM
-
-### Speed
-- **CPU**: 30-60 seconds per summary
-- **MPS (Apple Silicon)**: 10-20 seconds
-- **CUDA GPU**: 5-10 seconds
-
-### Optimization Tips
-1. Use model caching (`@st.cache_resource`)
-2. Limit concurrent users (10-20 for single instance)
-3. Consider model quantization for production
-4. Use smaller models if speed is critical
-
 ## 🐛 Troubleshooting
 
 ### Common Issues
@@ -279,54 +222,5 @@ ModuleNotFoundError: No module named 'X'
 ```bash
 pip install -r streamlit_app/requirements.txt
 ```
-
-## 🔐 Security Considerations
-
-- **Input Validation**: App sanitizes user inputs
-- **File Upload**: Limited to .txt files (10MB max)
-- **Rate Limiting**: Consider for production deployment
-- **API Keys**: Use environment variables
-
-## 📈 Future Enhancements
-
-- [ ] PDF and DOCX support
-- [ ] Batch summarization
-- [ ] Export to PDF/DOCX
-- [ ] User authentication
-- [ ] Feedback collection
-- [ ] Multi-language support
-- [ ] Chapter-by-chapter summarization
-- [ ] Custom model upload
-
-## 📚 References
-
-- [Streamlit Documentation](https://docs.streamlit.io/)
-- [Hugging Face Transformers](https://huggingface.co/docs/transformers)
-- [PEFT Library](https://huggingface.co/docs/peft)
-- [BART Paper](https://arxiv.org/abs/1910.13461)
-- [LoRA Paper](https://arxiv.org/abs/2106.09685)
-
-## 📝 License
-
-This project is part of an academic research project on book summarization.
-
-## 👥 Contributors
-
-Week 7 Deliverable - Book Summarization Project
-
-## 🙏 Acknowledgments
-
-- Hugging Face for transformer models
-- Streamlit team for the framework
-- PyTorch community
-
-## 📧 Support
-
-For issues or questions:
-1. Check this README
-2. Review the troubleshooting section
-3. Check Week 7 notebook for documentation
-
----
 
 **Built with ❤️ using Streamlit, PyTorch, and Hugging Face Transformers**
